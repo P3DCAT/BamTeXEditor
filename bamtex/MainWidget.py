@@ -1,10 +1,10 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QTabWidget, QWidget, QAction, QMenuBar, QVBoxLayout, QHBoxLayout, QListView, QLabel, QFormLayout, QFileDialog
-from PyQt5.QtGui import QIcon, QStandardItemModel, QStandardItem, QFont
+from PyQt5.QtWidgets import QMessageBox, QShortcut, QTabWidget, QWidget, QAction, QMenuBar, QVBoxLayout, QHBoxLayout, QListView, QLabel, QFormLayout, QFileDialog
+from PyQt5.QtGui import QIcon, QKeySequence, QStandardItemModel, QStandardItem, QFont
 from p3bamboo.BamFile import BamFile
 from .Texture import Texture
 from . import Globals
-import traceback, webbrowser
+import traceback, webbrowser, os
 
 class MainWidget(QWidget):
 
@@ -34,6 +34,9 @@ class MainWidget(QWidget):
         self.openAction.triggered.connect(self.openBamFile)
         self.saveAction.triggered.connect(self.saveBamFile)
         self.gitHubAction.triggered.connect(self.openGitHubPage)
+
+        self.saveShortcut = QShortcut(QKeySequence("Ctrl+S"), self)
+        self.saveShortcut.activated.connect(self.saveBamFile)
 
         self.baseWidget = QWidget()
         self.baseWidget.setContentsMargins(0, 0, 0, 0)
@@ -114,10 +117,18 @@ class MainWidget(QWidget):
         self.listView.setModel(self.listModel)
         self.listView.selectionModel().selectionChanged.connect(self.textureSelected)
 
+        self.setWindowTitle(f'BamTeXEditor - {os.path.basename(self.filename)}')
+
         if self.textures:
             self.openTexture(0)
 
     def saveBamFile(self):
+        if not self.saveAction.isEnabled():
+            return
+
+        if QMessageBox.question(self, 'BamTeXEditor', 'Are you sure you want to save your changes?', QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes) != QMessageBox.Yes:
+            return
+
         with open(self.filename, 'wb') as f:
             self.bam.write(f)
 
