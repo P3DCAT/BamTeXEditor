@@ -1,3 +1,4 @@
+from panda3d.core import ATS_unspecified, Texture
 from p3bamboo.BamObject import BamObject
 from p3bamboo.BamGlobals import read_vec4, write_vec
 
@@ -62,15 +63,27 @@ class Texture(BamObject):
         if self.bam_version >= (6, 1):
             self.compression = di.get_uint8() # CompressionMode
         else:
-            self.compression = 0
+            self.compression = Texture.CM_default
 
         if self.bam_version >= (6, 16):
             self.quality_level = di.get_uint8() # QualityLevel
         else:
-            self.quality_level = 0
+            self.quality_level = Texture.QL_unspecified
 
         self.tex_format = di.get_uint8() # Format
         self.num_components = di.get_uint8()
+
+        if self.texture_type == Texture.TT_buffer_texture:
+            self.usage_hint = di.get_uint8()
+
+        if self.bam_version >= (6, 28):
+            self.auto_texture_scale = di.get_uint8() # AutoTextureScale
+        else:
+            self.auto_texture_scale = ATS_unspecified
+
+        self.orig_file_x_size = di.get_uint32()
+        self.orig_file_y_size = di.get_uint32()
+
         self.texture_data = di.extract_bytes(di.get_remaining_size())
 
     def write(self, write_version, dg):
@@ -118,13 +131,21 @@ class Texture(BamObject):
         dg.add_uint8(self.tex_format) # Format
         dg.add_uint8(self.num_components)
 
+        if self.texture_type == TT_buffer_texture:
+            dg.add_uint8(self.usage_hint)
+
+        dg.add_uint32(self.orig_file_x_size)
+        dg.add_uint32(self.orig_file_y_size)
+
+        # TODO: Simple RAM image, clear color
+
         dg.append_data(self.texture_data)
 
     def __str__(self):
         return ('Texture(name={0}, filename={1}, alpha_filename={2}, primary_file_num_channels={3}, alpha_file_channel={4}, has_rawdata={5}, texture_type={6}, has_read_mipmaps={7}, ' +
             'wrap_u={8}, wrap_v={9}, wrap_w={10}, minfilter={11}, magfilter={12}, anisotropic_degree={13}, border_color={14}, min_lod={15}, max_lod={16}, lod_bias={17}, ' +
-            'compression={18}, quality_level={19}, format={20}, num_components={21}').format(
+            'compression={18}, quality_level={19}, format={20}, num_components={21}, usage_hint={22}, auto_texture_scale={23}, orig_file_x_size={24}, orig_file_y_size={25})'.format(
             self.name, self.filename, self.alpha_filename, self.primary_file_num_channels, self.alpha_file_channel, self.has_rawdata, self.texture_type, self.has_read_mipmaps,
             self.wrap_u, self.wrap_v, self.wrap_w, self.minfilter, self.magfilter, self.anisotropic_degree, self.border_color, self.min_lod, self.max_lod, self.lod_bias,
-            self.compression, self.quality_level, self.tex_format, self.num_components
-        )
+            self.compression, self.quality_level, self.tex_format, self.num_components, self.usage_hint, self.auto_texture_scale, self.orig_file_x_size, self.orig_file_y_size
+        ))
