@@ -1,6 +1,6 @@
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QTabWidget, QWidget, QAction, QMenuBar, QVBoxLayout, QHBoxLayout, QListView, QLabel, QFormLayout, QFileDialog
-from PyQt5.QtGui import QStandardItemModel, QStandardItem, QFont
+from PyQt5.QtGui import QIcon, QStandardItemModel, QStandardItem, QFont
 from p3bamboo.BamFile import BamFile
 from .Texture import Texture
 from . import Globals
@@ -14,6 +14,7 @@ class MainWidget(QWidget):
         self.bam = None
         self.textures = []
 
+        self.setWindowIcon(QIcon('icon.ico'))
         self.setWindowTitle('BamTeXEditor')
         self.setBackgroundColor(Qt.white)
 
