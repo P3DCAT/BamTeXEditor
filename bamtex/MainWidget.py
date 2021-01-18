@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QWidget, QAction, QMenuBar, QVBoxLayout, QHBoxLayout
 from PyQt5.QtGui import QStandardItemModel, QStandardItem, QFont
 from p3bamboo.BamFile import BamFile
 from .Texture import Texture
-import traceback
+import traceback, webbrowser
 
 class MainWidget(QWidget):
 
@@ -13,6 +13,7 @@ class MainWidget(QWidget):
         self.bam = None
         self.textures = []
 
+        self.setWindowTitle('BamTeXEditor')
         self.setBackgroundColor(Qt.white)
 
         self.menuBar = QMenuBar()
@@ -21,12 +22,16 @@ class MainWidget(QWidget):
         self.openAction = QAction('Open', self)
         self.saveAction = QAction('Save', self)
         self.saveAction.setEnabled(False)
+        self.gitHubAction = QAction('GitHub', self)
 
         self.fileMenu.addAction(self.openAction)
         self.fileMenu.addAction(self.saveAction)
+        self.fileMenu.addSeparator()
+        self.fileMenu.addAction(self.gitHubAction)
 
         self.openAction.triggered.connect(self.openBamFile)
         self.saveAction.triggered.connect(self.saveBamFile)
+        self.gitHubAction.triggered.connect(self.openGitHubPage)
 
         self.baseWidget = QWidget()
         self.baseWidget.setContentsMargins(0, 0, 0, 0)
@@ -103,6 +108,9 @@ class MainWidget(QWidget):
         for box in (self.textureNameBox, self.colorFilenameBox, self.alphaFilenameBox, self.colorChannelsBox, self.alphaFileChannelBox):
             box.clear()
             box.setEnabled(False)
+
+    def openGitHubPage(self):
+        webbrowser.open('https://github.com/P3DCAT/BamTeXEditor')
 
     def openBamFile(self):
         self.filename, _ = QFileDialog.getOpenFileName(self, "Open a Panda3D model!", "", "Panda3D BAM models (*.bam)")
