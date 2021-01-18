@@ -1,0 +1,8 @@
+BOOL = 0
+UINT8 = 1
+UINT32 = 2
+INT16 = 3
+FLOAT = 4
+COLOR = 5
+STRING = 6
+ENUM = 7

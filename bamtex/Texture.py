@@ -1,4 +1,5 @@
-from panda3d.core import ATS_unspecified, Texture
+from panda3d.core import ATS_unspecified, Geom
+from panda3d.core import Texture as P3Texture
 from p3bamboo.BamObject import BamObject
 from p3bamboo.BamGlobals import read_vec4, write_vec
 
@@ -63,18 +64,20 @@ class Texture(BamObject):
         if self.bam_version >= (6, 1):
             self.compression = di.get_uint8() # CompressionMode
         else:
-            self.compression = Texture.CM_default
+            self.compression = P3Texture.CM_default
 
         if self.bam_version >= (6, 16):
             self.quality_level = di.get_uint8() # QualityLevel
         else:
-            self.quality_level = Texture.QL_unspecified
+            self.quality_level = P3Texture.QL_unspecified
 
         self.tex_format = di.get_uint8() # Format
         self.num_components = di.get_uint8()
 
-        if self.texture_type == Texture.TT_buffer_texture:
+        if self.texture_type == P3Texture.TT_buffer_texture:
             self.usage_hint = di.get_uint8()
+        else:
+            self.usage_hint = Geom.UH_unspecified
 
         if self.bam_version >= (6, 28):
             self.auto_texture_scale = di.get_uint8() # AutoTextureScale
@@ -131,7 +134,7 @@ class Texture(BamObject):
         dg.add_uint8(self.tex_format) # Format
         dg.add_uint8(self.num_components)
 
-        if self.texture_type == TT_buffer_texture:
+        if self.texture_type == P3Texture.TT_buffer_texture:
             dg.add_uint8(self.usage_hint)
 
         dg.add_uint32(self.orig_file_x_size)

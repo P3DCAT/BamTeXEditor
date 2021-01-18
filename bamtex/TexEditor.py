@@ -11,6 +11,7 @@ class TexEditor(object):
 
     def run(self):
         self.main = MainWidget(self)
+        self.main.resize(1200, 400)
         self.main.show()
         BamFactory.register_type('Texture', Texture)
         self.app.exec_()
