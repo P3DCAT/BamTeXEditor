@@ -1,1 +1,2 @@
 p3bamboo>=1.0.6
+PyQt5
