@@ -100,7 +100,7 @@ class MainWidget(QWidget):
             with open(self.filename, 'rb') as f:
                 self.bam.load(f)
         except:
-            Globals.showError('Unfortunately, we could not load this model.\n\n{0}'.format(traceback.format_exc()))
+            Globals.showError(f'Unfortunately, we could not load this model.\n\n{traceback.format_exc()}')
             return
 
         self.clear()
@@ -129,8 +129,14 @@ class MainWidget(QWidget):
         if QMessageBox.question(self, 'BamTeXEditor', 'Are you sure you want to save your changes?', QMessageBox.Yes | QMessageBox.No, QMessageBox.Yes) != QMessageBox.Yes:
             return
 
-        with open(self.filename, 'wb') as f:
-            self.bam.write(f)
+        try:
+            with open(self.filename, 'wb') as f:
+                self.bam.write(f)
+        except:
+            Globals.showError(f'Unfortunately, we could not save this model.\n\n{traceback.format_exc()}')
+            return
+
+        QMessageBox.information(self, 'BamTeXEditor', f'{os.path.basename(self.filename)} has been saved!', QMessageBox.Ok)
 
     def openTexture(self, index):
         self.index = index
