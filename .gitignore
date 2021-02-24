@@ -2,3 +2,9 @@
 *.bak
 
 __pycache__
+build
+dist
+
+*.exe
+*.dll
+*.zip
