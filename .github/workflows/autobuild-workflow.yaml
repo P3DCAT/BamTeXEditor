@@ -1,8 +1,6 @@
 name: Autobuild
 
-on:
-  push:
-    branches: master
+on: [push, repository_dispatch, workflow_dispatch]
 
 jobs:
   build:
