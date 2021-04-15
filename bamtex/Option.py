@@ -13,6 +13,9 @@ MAX_UINT32 = (1 << 32) - 1
 MIN_INT16 = -(1 << 15)
 MAX_INT16 = (1 << 15) - 1
 
+MIN_INT32 = -(1 << 31)
+MAX_INT32 = (1 << 31) - 1
+
 class Option(object):
 
     def __init__(self, field, name, field_type, enum_type=None, bam_version=None):
@@ -68,6 +71,8 @@ class Option(object):
                 self.widget.setValidator(QDoubleValidator(MIN_UINT32, MAX_UINT32, 0))
             elif self.field_type == INT16:
                 self.widget.setValidator(QIntValidator(MIN_INT16, MAX_INT16))
+            elif self.field_type == INT32:
+                self.widget.setValidator(QIntValidator(MIN_INT32, MAX_INT32))
             elif self.field_type == FLOAT:
                 self.widget.setValidator(QDoubleValidator())
 
@@ -102,6 +107,11 @@ class Option(object):
             self.widget.setCurrentIndex(value)
         else:
             self.originalValue = str(value)
+
+            if self.field_type == BLOB:
+                # Strip b'' from string
+                self.originalValue = self.originalValue[2:-1]
+
             self.widget.setText(self.originalValue)
 
     def checkboxChecked(self, checked):
@@ -120,7 +130,8 @@ class Option(object):
         return (
             (self.field_type == UINT8 and (value < MIN_UINT8 or value > MAX_UINT8)) or
             (self.field_type == UINT32 and (value < MIN_UINT32 or value > MAX_UINT32)) or
-            (self.field_type == INT16 and (value < MIN_INT16 or value > MAX_INT16))
+            (self.field_type == INT16 and (value < MIN_INT16 or value > MAX_INT16)) or
+            (self.field_type == INT32 and (value < MIN_INT32 or value > MAX_INT32))
         )
 
     def textChanged(self):
@@ -128,6 +139,13 @@ class Option(object):
 
         if self.field_type == FLOAT:
             value = float(value)
+        elif self.field_type == BLOB:
+            try:
+                value = bytes(value, encoding='raw_unicode_escape')
+            except:
+                Globals.showError(f'This value is invalid.\n\nThe original value {self.originalValue} has been restored.')
+                self.restoreText()
+                return
         elif self.field_type != STRING:
             value = int(value)
 

@@ -158,6 +158,15 @@ TextureFields = [
         Option('auto_texture_scale', 'Auto texture scale', OptionGlobals.ENUM, enum_type=AutoTextureScale, bam_version=(6, 28)),
         Option('orig_file_x_size', "Original file's X size", OptionGlobals.UINT32),
         Option('orig_file_y_size', "Original file's Y size", OptionGlobals.UINT32)
+    ]],
+    ['Simple RAM Image', [
+        Option('has_simple_ram_image', 'Enabled', OptionGlobals.BOOL),
+        Option('simple_x_size', 'X size', OptionGlobals.UINT32),
+        Option('simple_y_size', 'Y size', OptionGlobals.UINT32),
+        Option('simple_image_date_generated', 'Date generated', OptionGlobals.INT32),
+        Option('simple_ram_image', 'Image data', OptionGlobals.BLOB),
+        Option('has_clear_color', 'Clear color enabled', OptionGlobals.BOOL),
+        Option('clear_color', 'Clear color', OptionGlobals.COLOR)
     ]]
 ]
 
