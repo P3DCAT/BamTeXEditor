@@ -97,7 +97,7 @@ class Texture(BamObject):
         else:
             self.simple_x_size = 0
             self.simple_y_size = 0
-            self.simple_image_date_generated = -1
+            self.simple_image_date_generated = 0
             self.simple_ram_image = b''
 
         self.has_clear_color = False
