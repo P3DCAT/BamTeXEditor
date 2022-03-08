@@ -1,5 +1,8 @@
 *.py[c|o]
-*.bak
+*.bak*
+.history
+.vs
+.idea
 
 __pycache__
 build

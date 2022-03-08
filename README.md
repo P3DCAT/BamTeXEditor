@@ -7,3 +7,7 @@ BamTexEditor (BTXE) is a tool that allows you to *directly* view and modify mate
 ## What can I use it for?
 
 BTXE can be used as an on-the-fly tool for tweaking BAM files!
+
+## Features
+![Image](./img/Preview2.png)
+![Image](./img/Preview1.png)
